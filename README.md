@@ -38,6 +38,14 @@ materi + diagram chord muncul di panel samping.
 - Tiap misi ngasih **koin 🪙 + XP**; XP naikin **level** (Lv n → n+1 butuh n×100 XP).
 - Progres kesimpen otomatis di browser (`localStorage`), ada tombol hapus simpanan.
 
+## NPC yang hidup 👾
+
+- **Obrolan warga**: tiap 6 detik ada NPC ngomong di bubble chat (tips gitar,
+  candaan, gumaman) — 55% sesuai ruangan yang lagi jalan.
+- **Sapa 👋**: ketuk NPC mana aja → profil kebuka → tombol Sapa. Sapaan pertama
+  tiap NPC tiap hari dapat **+1 🪙 +5 XP**.
+- HP otomatis kebuka dalam **tampilan dekat** biar pixelnya kelihatan gede.
+
 ## Toko, misi harian, suara & tab hadiah
 
 Panel samping punya 4 tab: **📚 Materi · ☀️ Harian · 🎸 Tab · 🛒 Toko**.

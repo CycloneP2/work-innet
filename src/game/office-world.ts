@@ -8,7 +8,7 @@ export const MAX_OFFICE_FURNITURE = 240;
 export const OFFICE_HEADCOUNT_MIN = 5;
 export const OFFICE_HEADCOUNT_MAX = 35;
 /* The required range is 20–35 employees. The initial screen must not start below it. */
-export const DEFAULT_OFFICE_HEADCOUNT = 20;
+export const DEFAULT_OFFICE_HEADCOUNT = 24;
 export const OFFICE_NAME_MAX = 32;
 /** company.config.ts continues to own the product name; use it only when the user has not chosen a company name. */
 export const DEFAULT_OFFICE_NAME = COMPANY.name;

@@ -66,6 +66,10 @@ export type OfficeWorldProps = {
    * The event provider must see the same count, so report every change.
    */
   onHeadcountChange?: (headcount: number) => void;
+  /** Called when the player taps "greet" on an agent's profile card. */
+  onGreetAgent?: (agentId: string) => void;
+  /** Agent ids already greeted today (their greet button shows as done). */
+  greetedIds?: readonly string[];
 };
 
 type WorldStyle = CSSProperties & Record<`--${string}`, string | number>;
@@ -424,6 +428,8 @@ export function OfficeWorld({
   motionTimeScale = 1,
   onArrivalSettledChange,
   onHeadcountChange,
+  onGreetAgent,
+  greetedIds,
 }: OfficeWorldProps) {
   const [history, setHistory] = useState<LayoutHistory>({
     past: [],
@@ -442,7 +448,10 @@ export function OfficeWorld({
   const [placingType, setPlacingType] = useState<OfficeFurnitureType | null>(null);
   const [selectedUid, setSelectedUid] = useState<string | null>(null);
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
-  const [cameraView, setCameraView] = useState<CameraView>("full");
+  // Phones start zoomed in so the pixel people are actually visible.
+  const [cameraView, setCameraView] = useState<CameraView>(() =>
+    typeof window !== "undefined" && window.innerWidth < 720 ? "close" : "full",
+  );
   // Whether the camera follows progress. Turn it off to keep one room in view.
   const [follow, setFollow] = useState(true);
   const [cameraPan, setCameraPan] = useState<{ x: number; y: number; workspaceId: string | null }>({
@@ -1306,6 +1315,17 @@ export function OfficeWorld({
                           <dd>{activity}</dd>
                         </div>
                       </dl>
+                      {greetedIds?.includes(agent.id) ? (
+                        <span className="agent-greeted">{t(locale, "office.greeted")}</span>
+                      ) : (
+                        <button
+                          className="agent-greet"
+                          type="button"
+                          onClick={() => onGreetAgent?.(agent.id)}
+                        >
+                          {t(locale, "office.greet")}
+                        </button>
+                      )}
                       <button type="button" onClick={() => setSelectedAgentId(null)} aria-label={t(locale, "office.agentClose")}>×</button>
                     </aside>
                   ) : null}

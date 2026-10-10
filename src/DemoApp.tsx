@@ -12,6 +12,7 @@ import {
 } from "./audio";
 import { COMPANY, STATUS_LABELS, THEME, WORKSPACES } from "./company.config";
 import { asset } from "./assets";
+import { chatterToLocalized, pickChatter, pickHello } from "./chatter";
 import { ChordChart } from "./ChordChart";
 import { dailyText, pickDailies, todayKey } from "./dailies";
 import {
@@ -34,6 +35,7 @@ import { LOCALES, LOCALE_LABELS, localized, type Locale, type LocalizedText } fr
 import { MISSIONS, missionText, ROOM_ORDER } from "./missions";
 import { lessonForRoom, lessonPoints, lessonPractice } from "./music-lessons";
 import { OfficeWorld } from "./OfficeWorld";
+import type { OfficeEvent } from "./game/office-events";
 import { guitarImage, guitarSkinOf, SHOP_ITEMS, shopText } from "./shop";
 import { isTabUnlocked, SOLO_TABS, tabForRoom } from "./solo-tabs";
 import { TabCard } from "./TabCard";
@@ -324,6 +326,13 @@ const UI = {
     vi: "Số dư",
     id: "Saldo",
   },
+  greetTip: {
+    ko: "주민을 눌러 인사해 보세요 — 매일 첫 인사에 +1 🪙!",
+    en: "Tap any resident to say hi — first hello each day earns +1 🪙!",
+    zh: "点任意居民打招呼——每天首次问候得 +1 🪙！",
+    vi: "Chạm vào cư dân để chào — lời chào đầu tiên mỗi ngày được +1 🪙!",
+    id: "Ketuk warga mana aja buat sapa — sapaan pertama tiap hari dapat +1 🪙!",
+  },
 } satisfies Record<string, LocalizedText>;
 
 const PANEL_TABS: { id: PanelTab; labelKey: "tabLesson" | "tabDaily" | "tabTabs" | "tabShop" }[] = [
@@ -346,6 +355,32 @@ export function DemoApp() {
     storeSave(save);
   }, [save]);
 
+  // --- NPC chatter: tiap 6 detik ada warga yang ngobrol ---
+  const [chatter, setChatter] = useState<OfficeEvent[]>([]);
+  // Urutan sama kayak AGENTS di OfficeWorld: 5 worker, lalu staff per angkatan.
+  const agentIds = useMemo(
+    () => [
+      ...WORKSPACES.map((w) => w.worker.id),
+      ...WORKSPACES[0].staff.flatMap((_, i) => WORKSPACES.map((w) => w.staff[i].id)),
+    ],
+    [],
+  );
+  useEffect(() => {
+    const speak = () => {
+      const line = pickChatter(activeId);
+      const id = agentIds[Math.floor(Math.random() * Math.min(agentIds.length, 24))];
+      setChatter([
+        { kind: "say", agentId: id, text: chatterToLocalized(line), tone: line.tone, ms: 4200 },
+      ]);
+    };
+    const first = window.setTimeout(speak, 2500);
+    const timer = window.setInterval(speak, 6000);
+    return () => {
+      window.clearTimeout(first);
+      window.clearInterval(timer);
+    };
+  }, [activeId, agentIds]);
+
   const activeUnlocked = activeId !== null && isUnlocked(save, activeId);
 
   const workspaceStatuses = useMemo(() => {
@@ -367,6 +402,33 @@ export function DemoApp() {
   const tabsUnlockedCount = SOLO_TABS.filter((tab) => isTabUnlocked(tab, save)).length;
   const rewardTab = activeId ? tabForRoom(activeId) : null;
   const showReward = activeId !== null && rewardTab !== null && roomFinished(save, activeId);
+
+  const greetedIds = useMemo(
+    () =>
+      (save.daily.date === dateKey ? save.daily.done : [])
+        .filter((id) => id.startsWith("greet:"))
+        .map((id) => id.slice("greet:".length)),
+    [save.daily, dateKey],
+  );
+
+  const greetAgent = (agentId: string) => {
+    setChatter([
+      { kind: "say", agentId, text: chatterToLocalized(pickHello()), tone: "talk", ms: 3500 },
+    ]);
+    setSave((prev) => {
+      const day =
+        prev.daily.date === dateKey ? prev.daily : { date: dateKey, done: [] as string[] };
+      const key = `greet:${agentId}`;
+      if (day.done.includes(key)) return prev;
+      coinSound();
+      return {
+        ...prev,
+        coins: prev.coins + 1,
+        xp: prev.xp + 5,
+        daily: { date: dateKey, done: [...day.done, key] },
+      };
+    });
+  };
 
   const selectRoom = (id: string) => {
     setJustUnlocked(null);
@@ -508,7 +570,9 @@ export function DemoApp() {
             activeWorkspaceId={activeUnlocked ? activeId : null}
             clock={{ label: localized(UI.clock, locale), time: "--:--" }}
             locale={locale}
-            officeEvents={[]}
+            officeEvents={chatter}
+            onGreetAgent={greetAgent}
+            greetedIds={greetedIds}
             ready={true}
             workflowStatus={activeUnlocked && activeId ? "running" : "idle"}
             workspaceStatuses={workspaceStatuses}
@@ -638,6 +702,7 @@ export function DemoApp() {
                   {localized(UI.progress, locale)}: {save.done.length}/{MISSIONS.length} ✅ ·{" "}
                   {save.coins} 🪙 · Lv {level}
                 </p>
+                <p className="lesson-desc greet-tip">👋 {localized(UI.greetTip, locale)}</p>
               </>
             )
           ) : null}
