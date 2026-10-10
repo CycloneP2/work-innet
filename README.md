@@ -1,5 +1,7 @@
 # GitarRoom · Studio Belajar Gitar 🎸
 
+**Live:** https://cyclonep2.github.io/work-innet/
+
 Sekolah gitar pixel — dari chord pertama sampai manggung pertama.
 Dibangun di atas demo desain kantor pixel (lihat [THIRD-PARTY.md](THIRD-PARTY.md) untuk atribusi aset).
 

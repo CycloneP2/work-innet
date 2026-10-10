@@ -309,9 +309,9 @@ export const AMENITY_ZONES = [
     ],
   },
   {
-    id: "lounge", code: "REST",
-    name: { ko: "휴게실", en: "Lounge", zh: "休息室", vi: "Phòng nghỉ", id: "Ruang Santai" },
-    role: { ko: "소파에 앉아 쉬는 곳", en: "A place to sit back on the sofa", zh: "坐在沙发上放松的地方", vi: "Nơi ngả lưng trên ghế sofa", id: "Tempat bersantai di sofa" },
+    id: "lounge", code: "CHILL",
+    name: { ko: "리스닝 라운지", en: "Listening Lounge", zh: "聆听室", vi: "Phòng nghe nhạc", id: "Ruang Dengar" },
+    role: { ko: "소파에 앉아 음악을 듣는 곳", en: "A place to sit back and listen to music together", zh: "坐在沙发上一起听音乐的地方", vi: "Nơi ngả lưng nghe nhạc cùng nhau", id: "Tempat bersantai sambil dengerin musik bareng" },
     accent: "#9b7bc7",
     col: 48, row: 18, cols: 11, rows: 11, door: { col: 53, row: 17 }, aisleCol: 53,
     seats: [
@@ -327,7 +327,7 @@ export const AMENITY_ZONES = [
   },
   {
     id: "dining", code: "DINE",
-    name: { ko: "식당", en: "Dining", zh: "餐厅", vi: "Nhà ăn", id: "Ruang Makan" },
+    name: { ko: "식당", en: "Canteen", zh: "食堂", vi: "Căn tin", id: "Kantin" },
     role: { ko: "함께 식사하는 곳", en: "A place to eat together", zh: "一起用餐的地方", vi: "Nơi cùng nhau dùng bữa", id: "Tempat makan bersama" },
     accent: "#73a55d",
     col: 60, row: 18, cols: 11, rows: 11, door: { col: 65, row: 17 }, aisleCol: 65,
