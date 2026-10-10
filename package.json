@@ -1,0 +1,23 @@
+{
+  "name": "gitarroom-pixel-school",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GitarRoom — pixel guitar school demo (music room first concept)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "@vitejs/plugin-react": "6.0.5",
+    "typescript": "5.9.3",
+    "vite": "8.2.0"
+  }
+}

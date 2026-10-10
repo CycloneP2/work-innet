@@ -1,0 +1,255 @@
+/* Demo-shell styles — layered on top of globals.css without touching it. */
+.demo-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  background: var(--color-app);
+}
+
+.demo-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--color-frame);
+}
+
+.demo-bar strong {
+  font-size: 15px;
+}
+
+.demo-bar select {
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
+  color: var(--color-ink);
+}
+
+.demo-preview-label {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.demo-states {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.demo-states button {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.demo-states button.on {
+  background: var(--color-amber);
+  border-color: var(--color-edge);
+  font-weight: 700;
+}
+
+/* GitarRoom brand block in the top bar. */
+.demo-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: auto;
+}
+
+.demo-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--color-amber);
+  color: #3a2200;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 14px;
+  flex: none;
+}
+
+.demo-tag {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+/* Office floor + guitar lesson side panel. */
+.demo-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+  align-items: start;
+}
+
+.demo-layout .office-panel {
+  height: 100%;
+  min-height: 480px;
+}
+
+@media (max-width: 1100px) {
+  .demo-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.lesson-panel {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  border: 1px solid var(--color-line);
+  border-top: 5px solid var(--color-amber);
+  border-radius: 14px;
+  padding: 16px 18px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+@media (min-width: 1101px) {
+  .lesson-panel {
+    position: sticky;
+    top: 12px;
+    max-height: calc(100vh - 24px);
+    overflow: auto;
+  }
+}
+
+.lesson-panel h2 {
+  margin: 2px 0 6px;
+  font-size: 21px;
+  line-height: 1.25;
+}
+
+.lesson-panel h3 {
+  margin: 14px 0 8px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+}
+
+.lesson-level {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-wood);
+}
+
+.lesson-room {
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.lesson-instructor {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.lesson-desc {
+  margin: 0 0 8px;
+}
+
+.lesson-points {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 5px;
+}
+
+.chord-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chord-chart {
+  margin: 0;
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  padding: 8px 10px 6px;
+}
+
+.chord-chart figcaption {
+  text-align: center;
+  font-weight: 800;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.chord-grid {
+  display: flex;
+  border-right: 1px solid var(--color-edge);
+  border-bottom: 1px solid var(--color-edge);
+}
+
+.chord-string {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 24px;
+}
+
+.chord-head {
+  height: 15px;
+  font-size: 10px;
+  line-height: 15px;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.chord-cell {
+  position: relative;
+  height: 17px;
+  border-left: 1px solid var(--color-edge);
+  border-top: 1px solid var(--color-edge);
+}
+
+.chord-cell.nut {
+  border-top: 3px solid var(--color-ink);
+}
+
+.chord-cell.dot::after {
+  content: "";
+  position: absolute;
+  inset: 2px 4px;
+  border-radius: 50%;
+  background: var(--color-ink);
+}
+
+.chord-string-name {
+  font-size: 9px;
+  text-align: center;
+  color: var(--color-muted);
+  margin-top: 2px;
+}
+
+.practice-box {
+  margin-top: 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-left: 5px solid var(--color-amber);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.practice-box p {
+  margin: 4px 0 0;
+}
+
+.demo-foot {
+  color: var(--color-muted);
+  font-size: 12px;
+}
