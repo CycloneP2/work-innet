@@ -333,6 +333,20 @@ const UI = {
     vi: "Chạm vào cư dân để chào — lời chào đầu tiên mỗi ngày được +1 🪙!",
     id: "Ketuk warga mana aja buat sapa — sapaan pertama tiap hari dapat +1 🪙!",
   },
+  showView: {
+    ko: "🖥️ 화면 보기",
+    en: "🖥️ Show screen",
+    zh: "🖥️ 显示画面",
+    vi: "🖥️ Hiện màn hình",
+    id: "🖥️ Tampilkan layar",
+  },
+  hideView: {
+    ko: "👁️ 화면 숨기기",
+    en: "👁️ Hide screen",
+    zh: "👁️ 隐藏画面",
+    vi: "👁️ Ẩn màn hình",
+    id: "👁️ Sembunyikan layar",
+  },
 } satisfies Record<string, LocalizedText>;
 
 const PANEL_TABS: { id: PanelTab; labelKey: "tabLesson" | "tabDaily" | "tabTabs" | "tabShop" }[] = [
@@ -350,10 +364,25 @@ export function DemoApp() {
   const [panelTab, setPanelTab] = useState<PanelTab>("lesson");
   const [muted, setMutedState] = useState<boolean>(() => isMuted());
   const [deniedId, setDeniedId] = useState<string | null>(null);
+  const [showOffice, setShowOffice] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem("gitarroom-show-office") !== "0";
+    } catch {
+      return true;
+    }
+  });
 
   useEffect(() => {
     storeSave(save);
   }, [save]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("gitarroom-show-office", showOffice ? "1" : "0");
+    } catch {
+      /* abaikan */
+    }
+  }, [showOffice]);
 
   // --- NPC chatter: tiap 6 detik ada warga yang ngobrol ---
   const [chatter, setChatter] = useState<OfficeEvent[]>([]);
@@ -564,7 +593,19 @@ export function DemoApp() {
         </div>
       ) : null}
 
-      <div className="workspace-layout demo-layout">
+      <div className="view-toggle-row">
+        <button
+          onClick={() => {
+            clickSound();
+            setShowOffice((prev) => !prev);
+          }}
+          type="button"
+        >
+          {localized(showOffice ? UI.hideView : UI.showView, locale)}
+        </button>
+      </div>
+
+      <div className={`workspace-layout demo-layout${showOffice ? "" : " office-hidden"}`}>
         <section className="office-panel" data-pane="office">
           <OfficeWorld
             activeWorkspaceId={activeUnlocked ? activeId : null}
