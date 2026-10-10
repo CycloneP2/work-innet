@@ -1,0 +1,707 @@
+/* Demo-shell styles — layered on top of globals.css without touching it. */
+.demo-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  background: var(--color-app);
+}
+
+.demo-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--color-frame);
+}
+
+.demo-bar strong {
+  font-size: 15px;
+}
+
+.demo-bar select {
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
+  color: var(--color-ink);
+}
+
+.demo-preview-label {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.demo-states {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.demo-states button {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.demo-states button.on {
+  background: var(--color-amber);
+  border-color: var(--color-edge);
+  font-weight: 700;
+}
+
+/* GitarRoom brand block in the top bar. */
+.demo-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: auto;
+}
+
+.demo-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--color-amber);
+  color: #3a2200;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 14px;
+  flex: none;
+}
+
+.demo-tag {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+/* Office floor + guitar lesson side panel. */
+.demo-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+  align-items: start;
+}
+
+.demo-layout .office-panel {
+  height: 100%;
+  min-height: 480px;
+}
+
+/* globals.css hides the office under 1180px (original app behavior).
+   GitarRoom always shows it — the pixel school IS the main screen. */
+.demo-layout > .office-panel {
+  display: flex;
+}
+
+@media (max-width: 1100px) {
+  .demo-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* Header layar dirampingkan: summary panjang disembunyikan, judul + jam dikecilin. */
+  .office-world-heading {
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 0;
+    padding: 8px 10px;
+  }
+  .office-world-heading h3 {
+    font-size: 15px;
+  }
+  .office-world-heading > div:first-child > span {
+    display: none;
+  }
+  .office-clock-card {
+    flex: 0 0 auto;
+    width: auto;
+    min-height: 0;
+    padding: 4px 10px;
+  }
+  .office-clock-card time {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 720px) {
+  /* Jam demonya statis ("--:--") — buang di HP biar hemat tempat. */
+  .office-clock-card {
+    display: none;
+  }
+  .office-world-heading p {
+    display: none;
+  }
+  .demo-layout .office-panel {
+    min-height: 420px;
+  }
+}
+
+.lesson-panel {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  border: 1px solid var(--color-line);
+  border-top: 5px solid var(--color-amber);
+  border-radius: 14px;
+  padding: 16px 18px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+@media (min-width: 1101px) {
+  .lesson-panel {
+    position: sticky;
+    top: 12px;
+    max-height: calc(100vh - 24px);
+    overflow: auto;
+  }
+}
+
+.lesson-panel h2 {
+  margin: 2px 0 6px;
+  font-size: 21px;
+  line-height: 1.25;
+}
+
+.lesson-panel h3 {
+  margin: 14px 0 8px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+}
+
+.lesson-level {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-wood);
+}
+
+.lesson-room {
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.lesson-instructor {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.lesson-desc {
+  margin: 0 0 8px;
+}
+
+.lesson-points {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 5px;
+}
+
+.chord-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chord-chart {
+  margin: 0;
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  padding: 8px 10px 6px;
+}
+
+.chord-chart figcaption {
+  text-align: center;
+  font-weight: 800;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.chord-grid {
+  display: flex;
+  border-right: 1px solid var(--color-edge);
+  border-bottom: 1px solid var(--color-edge);
+}
+
+.chord-string {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 24px;
+}
+
+.chord-head {
+  height: 15px;
+  font-size: 10px;
+  line-height: 15px;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.chord-cell {
+  position: relative;
+  height: 17px;
+  border-left: 1px solid var(--color-edge);
+  border-top: 1px solid var(--color-edge);
+}
+
+.chord-cell.nut {
+  border-top: 3px solid var(--color-ink);
+}
+
+.chord-cell.dot::after {
+  content: "";
+  position: absolute;
+  inset: 2px 4px;
+  border-radius: 50%;
+  background: var(--color-ink);
+}
+
+.chord-string-name {
+  font-size: 9px;
+  text-align: center;
+  color: var(--color-muted);
+  margin-top: 2px;
+}
+
+.practice-box {
+  margin-top: 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-left: 5px solid var(--color-amber);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.practice-box p {
+  margin: 4px 0 0;
+}
+
+/* --- GitarRoom game UI: mode toggle, stats, missions --- */
+.mode-toggle {
+  display: flex;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.mode-toggle button {
+  padding: 4px 12px;
+  border: 0;
+  background: var(--color-panel);
+  color: var(--color-ink);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.mode-toggle button.on {
+  background: var(--color-edge);
+  color: #fff;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  font-size: 13px;
+}
+
+.stat-pill img {
+  image-rendering: pixelated;
+}
+
+.stat-pill small {
+  color: var(--color-muted);
+  font-size: 11px;
+}
+
+.xp-bar {
+  width: 64px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-line);
+  overflow: hidden;
+}
+
+.xp-bar span {
+  display: block;
+  height: 100%;
+  background: var(--color-green);
+}
+
+.demo-states button.locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.unlock-banner {
+  background: var(--color-amber);
+  color: #3a2200;
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.mission-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.mission-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.mission-list li.done {
+  opacity: 0.75;
+  background: var(--color-surface);
+}
+
+.mission-list li > div {
+  display: grid;
+  gap: 1px;
+}
+
+.mission-list small {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.mission-list .reward {
+  font-weight: 700;
+  color: var(--color-wood);
+}
+
+.mission-list button {
+  flex: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--color-edge);
+  background: var(--color-amber);
+  color: #3a2200;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.mission-list .claimed {
+  flex: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.locked-panel,
+.welcome-guitar {
+  text-align: center;
+}
+
+.locked-panel img,
+.welcome-guitar {
+  image-rendering: pixelated;
+}
+
+.locked-panel {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 12px 0;
+}
+
+.reset-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-muted);
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.icon-btn {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* --- Panel tabs: Materi / Harian / Tab / Toko --- */
+.panel-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.panel-tabs button {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--color-line);
+  background: #fff;
+  color: var(--color-ink);
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.panel-tabs button.on {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-cream);
+}
+
+.tab-badge {
+  position: absolute;
+  top: -7px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--color-red);
+  color: #fff;
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+}
+
+.reward-banner {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-left: 5px solid var(--color-green);
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.reward-banner button {
+  margin-left: 8px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-edge);
+  background: var(--color-green);
+  color: #08251a;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* --- Tab cards --- */
+.tab-list {
+  display: grid;
+  gap: 10px;
+}
+
+.tab-card {
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.tab-card.locked {
+  opacity: 0.8;
+  background: var(--color-panel);
+}
+
+.tab-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.tab-card header small {
+  color: var(--color-muted);
+  font-size: 12px;
+  flex: none;
+}
+
+.tab-card p {
+  margin: 4px 0 8px;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.tab-card pre {
+  margin: 0 0 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--color-ink);
+  color: #ffe3a3;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.tab-card button {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--color-edge);
+  background: var(--color-amber);
+  color: #3a2200;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* --- Shop --- */
+.boost-note {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.shop-list {
+  display: grid;
+  gap: 10px;
+}
+
+.shop-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.shop-item img {
+  image-rendering: pixelated;
+  flex: none;
+}
+
+.shop-emoji {
+  font-size: 30px;
+  width: 36px;
+  text-align: center;
+  flex: none;
+}
+
+.shop-item > div {
+  display: grid;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.shop-item small {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.shop-item .denied {
+  font-weight: 800;
+  color: var(--color-red);
+}
+
+.shop-item button {
+  flex: none;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--color-edge);
+  background: var(--color-amber);
+  color: #3a2200;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* --- NPC greet button on the agent profile card --- */
+.world-agent-popover .agent-greet {
+  margin-top: 6px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--color-edge);
+  background: var(--color-amber);
+  color: #3a2200;
+  font-weight: 800;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.world-agent-popover .agent-greeted {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.greet-tip {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+/* --- Show/hide layar pixel --- */
+.view-toggle-row {
+  display: flex;
+}
+
+.view-toggle-row button {
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
+  color: var(--color-ink);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.demo-layout.office-hidden {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.demo-layout.office-hidden > .office-panel {
+  display: none;
+}
+
+.demo-foot {
+  color: var(--color-muted);
+  font-size: 12px;
+}
