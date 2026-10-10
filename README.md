@@ -28,17 +28,39 @@ materi + diagram chord muncul di panel samping.
 - Ganti bahasa: Indonesia, English, 中文, 한국어, Tiếng Việt (buka dalam Bahasa Indonesia).
 - Tombol **Tata sekolah saya**: editor perabot (3 preset gaya, 5–35 orang).
 
+## Mode game: Story vs Bebas
+
+- **📖 Story**: ruangan kebuka berurutan. Selesaikan semua misi di satu ruangan
+  buat buka ruangan berikut (+25 🪙 bonus).
+- **🆓 Bebas**: semua ruangan langsung kebuka, misi tetap bisa diklaim.
+- Tiap misi ngasih **koin 🪙 + XP**; XP naikin **level** (Lv n → n+1 butuh n×100 XP).
+- Progres kesimpen otomatis di browser (`localStorage`), ada tombol hapus simpanan.
+
 ## Struktur
 
 | Path | Isi |
 |---|---|
 | `src/company.config.ts` | Nama brand, 5 ruangan musik, instruktur + staf (5 bahasa) |
 | `src/music-lessons.ts` | Materi gitar + diagram chord per ruangan |
+| `src/missions.ts` | 15 misi (3 per ruangan) + urutan story |
+| `src/game-save.ts` | Save/load, koin, XP/level, sistem unlock |
 | `src/ChordChart.tsx` | Komponen diagram chord (6 senar × 5 fret) |
-| `src/DemoApp.tsx` | Bar atas + panel materi gitar |
+| `src/DemoApp.tsx` | Bar atas + panel materi + UI game |
 | `src/game/office-world.ts` | Dunia tile 72×30: ruangan, kursi, perabot |
 | `src/OfficeWorld.tsx` | Renderer + mesin gerak karakter |
 | `src/i18n.ts` | Kamus UI 5 bahasa |
+| `scripts/pixel-svg.mjs` | Generator aset pixel orisinal → `public/gitarroom/` |
+
+## Aset
+
+- `public/gitarroom/` (gitar, koin, pick): **orisinal, milik sendiri**, dibuat dari
+  `scripts/pixel-svg.mjs` — bebas dipakai tanpa risiko lisensi.
+- Butuh aset tambahan? Ambil yang **CC0** (bebas komersial, tanpa atribusi):
+  - Kenney (60.000+ aset, UI + jingle musik): https://kenney.nl/assets
+  - Ikon instrumen musik CC0 32×32 (ada gitar): https://opengameart.org/content/cc0-music-icons
+  - Efek suara petikan gitar CC0: https://opengameart.org/content/guitar-0
+  - FreeGameSprites (20.000+ sprite CC0): https://freegamesprites.com/en
+  - itch.io: Pixel Frog, Ansimuz, 0x72 (pack CC0).
 
 ## Ganti nama company
 
