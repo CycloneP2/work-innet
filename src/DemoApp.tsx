@@ -1,14 +1,29 @@
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useState } from "react";
+import {
+  buy as buySound,
+  click as clickSound,
+  coin as coinSound,
+  deny as denySound,
+  fanfare as fanfareSound,
+  isMuted,
+  setMuted,
+  strum,
+} from "./audio";
 import { COMPANY, STATUS_LABELS, THEME, WORKSPACES } from "./company.config";
 import { ChordChart } from "./ChordChart";
+import { dailyText, pickDailies, todayKey } from "./dailies";
 import {
+  buyItem,
+  claimDaily,
   completeMission,
   defaultSave,
+  equipGuitar,
   isUnlocked,
   levelFromXp,
   loadSave,
   missionsForRoom,
+  roomFinished,
   storeSave,
   UNLOCK_BONUS_COINS,
   type GameMode,
@@ -18,6 +33,9 @@ import { LOCALES, LOCALE_LABELS, localized, type Locale, type LocalizedText } fr
 import { MISSIONS, missionText, ROOM_ORDER } from "./missions";
 import { lessonForRoom, lessonPoints, lessonPractice } from "./music-lessons";
 import { OfficeWorld } from "./OfficeWorld";
+import { guitarImage, guitarSkinOf, SHOP_ITEMS, shopText } from "./shop";
+import { isTabUnlocked, SOLO_TABS, tabForRoom } from "./solo-tabs";
+import { TabCard } from "./TabCard";
 import type { WorkflowStatus } from "./game/workflow";
 
 const themeStyle = {
@@ -41,6 +59,8 @@ const themeStyle = {
   "--color-focus": THEME.focus,
   "--color-shadow": THEME.shadow,
 } as CSSProperties;
+
+type PanelTab = "lesson" | "daily" | "tabs" | "shop";
 
 /** Demo-only copy. Product copy lives in i18n.ts and company.config.ts. */
 const UI = {
@@ -177,13 +197,149 @@ const UI = {
     vi: "Xóa hết xu, nhiệm vụ và cấp độ?",
     id: "Hapus semua koin, misi, dan level?",
   },
+  tabLesson: {
+    ko: "📚 수업",
+    en: "📚 Lesson",
+    zh: "📚 课程",
+    vi: "📚 Bài học",
+    id: "📚 Materi",
+  },
+  tabDaily: {
+    ko: "☀️ 일일",
+    en: "☀️ Daily",
+    zh: "☀️ 每日",
+    vi: "☀️ Hằng ngày",
+    id: "☀️ Harian",
+  },
+  tabTabs: {
+    ko: "🎸 타브",
+    en: "🎸 Tabs",
+    zh: "🎸 吉他谱",
+    vi: "🎸 Tab",
+    id: "🎸 Tab",
+  },
+  tabShop: {
+    ko: "🛒 상점",
+    en: "🛒 Shop",
+    zh: "🛒 商店",
+    vi: "🛒 Cửa hàng",
+    id: "🛒 Toko",
+  },
+  dailyHint: {
+    ko: "매일 바뀌어요. 자정에 리셋됩니다.",
+    en: "Fresh every day. Resets at midnight.",
+    zh: "每天更新，午夜重置。",
+    vi: "Mới mỗi ngày. Đặt lại lúc nửa đêm.",
+    id: "Ganti tiap hari. Reset tengah malam.",
+  },
+  buy: {
+    ko: "구매",
+    en: "Buy",
+    zh: "购买",
+    vi: "Mua",
+    id: "Beli",
+  },
+  owned: {
+    ko: "보유 중",
+    en: "Owned",
+    zh: "已拥有",
+    vi: "Đã có",
+    id: "Punya",
+  },
+  use: {
+    ko: "사용",
+    en: "Equip",
+    zh: "装备",
+    vi: "Dùng",
+    id: "Pakai",
+  },
+  using: {
+    ko: "사용 중",
+    en: "Equipped",
+    zh: "使用中",
+    vi: "Đang dùng",
+    id: "Dipakai",
+  },
+  boostLeft: {
+    ko: "더블 XP {n}개 남음",
+    en: "Double XP: {n} left",
+    zh: "双倍经验还剩 {n} 次",
+    vi: "Double XP còn {n} lượt",
+    id: "Double XP sisa {n} misi",
+  },
+  needCoins: {
+    ko: "코인이 부족해요!",
+    en: "Not enough coins!",
+    zh: "金币不够！",
+    vi: "Không đủ xu!",
+    id: "Koin kurang!",
+  },
+  rewardOpen: {
+    ko: "보상 타브",
+    en: "Reward tab",
+    zh: "奖励吉他谱",
+    vi: "Tab phần thưởng",
+    id: "Tab hadiah",
+  },
+  openPlay: {
+    ko: "열고 연주하기",
+    en: "Open & play",
+    zh: "打开并演奏",
+    vi: "Mở & chơi",
+    id: "Buka & mainkan",
+  },
+  unlockByRoom: {
+    ko: "조건: {room} 완료",
+    en: "Finish: {room}",
+    zh: "完成：{room}",
+    vi: "Hoàn thành: {room}",
+    id: "Selesaikan: {room}",
+  },
+  unlockByPack: {
+    ko: "상점에서 타브 팩 Vol.2 구매",
+    en: "Buy Tab Pack Vol.2 in the Shop",
+    zh: "在商店购买 Tab Pack Vol.2",
+    vi: "Mua Tab Pack Vol.2 ở Cửa hàng",
+    id: "Beli Paket Tab Vol.2 di Toko",
+  },
+  play: {
+    ko: "연주",
+    en: "Play",
+    zh: "演奏",
+    vi: "Chơi",
+    id: "Mainkan",
+  },
+  stop: {
+    ko: "정지",
+    en: "Stop",
+    zh: "停止",
+    vi: "Dừng",
+    id: "Stop",
+  },
+  balance: {
+    ko: "잔액",
+    en: "Balance",
+    zh: "余额",
+    vi: "Số dư",
+    id: "Saldo",
+  },
 } satisfies Record<string, LocalizedText>;
+
+const PANEL_TABS: { id: PanelTab; labelKey: "tabLesson" | "tabDaily" | "tabTabs" | "tabShop" }[] = [
+  { id: "lesson", labelKey: "tabLesson" },
+  { id: "daily", labelKey: "tabDaily" },
+  { id: "tabs", labelKey: "tabTabs" },
+  { id: "shop", labelKey: "tabShop" },
+];
 
 export function DemoApp() {
   const [locale, setLocale] = useState<Locale>("id");
   const [activeId, setActiveId] = useState<string | null>("briefing");
   const [save, setSave] = useState<SaveData>(() => loadSave());
   const [justUnlocked, setJustUnlocked] = useState<string | null>(null);
+  const [panelTab, setPanelTab] = useState<PanelTab>("lesson");
+  const [muted, setMutedState] = useState<boolean>(() => isMuted());
+  const [deniedId, setDeniedId] = useState<string | null>(null);
 
   useEffect(() => {
     storeSave(save);
@@ -204,7 +360,25 @@ export function DemoApp() {
   const { level, into, need } = levelFromXp(save.xp);
   const xpPct = Math.round((into / need) * 100);
 
+  const dateKey = todayKey();
+  const dailies = useMemo(() => pickDailies(dateKey), [dateKey]);
+  const dailyDone = save.daily.date === dateKey ? save.daily.done : [];
+  const tabsUnlockedCount = SOLO_TABS.filter((tab) => isTabUnlocked(tab, save)).length;
+  const rewardTab = activeId ? tabForRoom(activeId) : null;
+  const showReward = activeId !== null && rewardTab !== null && roomFinished(save, activeId);
+
+  const selectRoom = (id: string) => {
+    setJustUnlocked(null);
+    setActiveId(id);
+    setPanelTab("lesson");
+    if (isUnlocked(save, id)) {
+      const roomLesson = lessonForRoom(id);
+      if (roomLesson?.chords[0]) strum(roomLesson.chords[0].frets);
+    }
+  };
+
   const setMode = (mode: GameMode) => {
+    clickSound();
     setJustUnlocked(null);
     if (mode === "story" && activeId !== null) {
       const nextSave = { ...save, mode };
@@ -215,12 +389,20 @@ export function DemoApp() {
     setSave((prev) => ({ ...prev, mode }));
   };
 
+  const toggleMute = () => {
+    const next = !muted;
+    setMuted(next);
+    setMutedState(next);
+    if (!next) clickSound();
+  };
+
   const resetSave = () => {
     if (!window.confirm(localized(UI.resetConfirm, locale))) return;
     const fresh = defaultSave();
     setSave(fresh);
     setActiveId(ROOM_ORDER[0]);
     setJustUnlocked(null);
+    setPanelTab("lesson");
   };
 
   const unlockedRoomName = justUnlocked
@@ -265,6 +447,9 @@ export function DemoApp() {
             {into}/{need}
           </small>
         </div>
+        <button className="icon-btn" onClick={toggleMute} title={muted ? "unmute" : "mute"} type="button">
+          {muted ? "🔇" : "🔊"}
+        </button>
 
         <select
           aria-label="language"
@@ -281,7 +466,11 @@ export function DemoApp() {
         <div className="demo-states">
           <button
             className={activeId === null ? "on" : ""}
-            onClick={() => setActiveId(null)}
+            onClick={() => {
+              clickSound();
+              setActiveId(null);
+              setPanelTab("lesson");
+            }}
             type="button"
           >
             {localized(STATUS_LABELS.idle, locale)}
@@ -293,10 +482,7 @@ export function DemoApp() {
                 className={`${activeId === workspace.id ? "on" : ""}${locked ? " locked" : ""}`}
                 disabled={locked}
                 key={workspace.id}
-                onClick={() => {
-                  setJustUnlocked(null);
-                  setActiveId(workspace.id);
-                }}
+                onClick={() => selectRoom(workspace.id)}
                 title={locked ? localized(UI.locked, locale) : undefined}
                 type="button"
               >
@@ -332,38 +518,145 @@ export function DemoApp() {
           className="lesson-panel"
           style={activeWorkspace ? { borderTopColor: activeWorkspace.accent } : undefined}
         >
-          {lesson && activeWorkspace && activeId ? (
+          <nav className="panel-tabs">
+            {PANEL_TABS.map(({ id, labelKey }) => (
+              <button
+                className={panelTab === id ? "on" : ""}
+                key={id}
+                onClick={() => {
+                  clickSound();
+                  setPanelTab(id);
+                }}
+                type="button"
+              >
+                {localized(UI[labelKey], locale)}
+                {id === "daily" && dailyDone.length < dailies.length ? (
+                  <span className="tab-badge">{dailies.length - dailyDone.length}</span>
+                ) : null}
+              </button>
+            ))}
+          </nav>
+
+          {panelTab === "lesson" ? (
+            lesson && activeWorkspace && activeId ? (
+              <>
+                {showReward && rewardTab ? (
+                  <div className="reward-banner">
+                    🎁 {localized(UI.rewardOpen, locale)}:{" "}
+                    <strong>{localized(rewardTab.title, locale)}</strong>{" "}
+                    <button onClick={() => setPanelTab("tabs")} type="button">
+                      {localized(UI.openPlay, locale)}
+                    </button>
+                  </div>
+                ) : null}
+                <p className="lesson-level">{localized(lesson.level, locale)}</p>
+                <h2>{localized(lesson.title, locale)}</h2>
+                <p className="lesson-room">
+                  {localized(activeWorkspace.name, locale)} · {localized(activeWorkspace.role, locale)}
+                </p>
+                <p className="lesson-instructor">
+                  {localized(UI.instructor, locale)}: {localized(activeWorkspace.worker.title, locale)}{" "}
+                  {localized(activeWorkspace.worker.name, locale)}
+                </p>
+                <p className="lesson-desc">{localized(lesson.desc, locale)}</p>
+                <ol className="lesson-points">
+                  {lessonPoints(lesson, locale).map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ol>
+                <h3>
+                  {localized(UI.missions, locale)} ·{" "}
+                  {missionsForRoom(activeId).filter((m) => save.done.includes(m.id)).length}/
+                  {missionsForRoom(activeId).length}
+                </h3>
+                <ul className="mission-list">
+                  {missionsForRoom(activeId).map((mission) => {
+                    const done = save.done.includes(mission.id);
+                    return (
+                      <li className={done ? "done" : ""} key={mission.id}>
+                        <div>
+                          <strong>{missionText(mission, "title", locale)}</strong>
+                          <small>{missionText(mission, "hint", locale)}</small>
+                          <small className="reward">
+                            +{mission.coins} 🪙 · +{mission.xp}
+                            {save.xpBoost > 0 && !done ? "×2" : ""} XP
+                          </small>
+                        </div>
+                        {done ? (
+                          <span className="claimed">✅ {localized(UI.claimed, locale)}</span>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              const result = completeMission(save, mission);
+                              setSave(result.save);
+                              setJustUnlocked(result.unlockedRoom);
+                              if (result.unlockedRoom) fanfareSound();
+                              else coinSound();
+                            }}
+                            type="button"
+                          >
+                            {localized(UI.claim, locale)}
+                          </button>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+                <h3>{localized(UI.todayChords, locale)}</h3>
+                <div className="chord-list">
+                  {lesson.chords.map((chord) => (
+                    <ChordChart chord={chord} key={chord.name} />
+                  ))}
+                </div>
+                <div className="practice-box">
+                  <strong>🎯 {localized(UI.drill, locale)}</strong>
+                  <p>{lessonPractice(lesson, locale)}</p>
+                </div>
+              </>
+            ) : activeWorkspace && activeId && !activeUnlocked ? (
+              <div className="locked-panel">
+                <img src={guitarImage(save.activeGuitar)} alt="" width={72} height={120} />
+                <p className="lesson-level">🔒 {localized(UI.locked, locale)}</p>
+                <h2>{localized(activeWorkspace.name, locale)}</h2>
+                <p className="lesson-desc">{localized(UI.lockedHint, locale)}</p>
+              </div>
+            ) : (
+              <>
+                <img
+                  className="welcome-guitar"
+                  src={guitarImage(save.activeGuitar)}
+                  alt="GitarRoom guitar"
+                  width={72}
+                  height={120}
+                />
+                <p className="lesson-level">🎸 GitarRoom</p>
+                <h2>{localized(UI.welcomeTitle, locale)}</h2>
+                <p className="lesson-desc">{localized(COMPANY.description, locale)}</p>
+                <p className="lesson-desc">{localized(UI.pickRoom, locale)}</p>
+                <p className="lesson-desc">
+                  {localized(UI.progress, locale)}: {save.done.length}/{MISSIONS.length} ✅ ·{" "}
+                  {save.coins} 🪙 · Lv {level}
+                </p>
+              </>
+            )
+          ) : null}
+
+          {panelTab === "daily" ? (
             <>
-              <p className="lesson-level">{localized(lesson.level, locale)}</p>
-              <h2>{localized(lesson.title, locale)}</h2>
-              <p className="lesson-room">
-                {localized(activeWorkspace.name, locale)} · {localized(activeWorkspace.role, locale)}
-              </p>
-              <p className="lesson-instructor">
-                {localized(UI.instructor, locale)}: {localized(activeWorkspace.worker.title, locale)}{" "}
-                {localized(activeWorkspace.worker.name, locale)}
-              </p>
-              <p className="lesson-desc">{localized(lesson.desc, locale)}</p>
-              <ol className="lesson-points">
-                {lessonPoints(lesson, locale).map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ol>
-              <h3>
-                {localized(UI.missions, locale)} ·{" "}
-                {missionsForRoom(activeId).filter((m) => save.done.includes(m.id)).length}/
-                {missionsForRoom(activeId).length}
-              </h3>
+              <p className="lesson-level">☀️ {dateKey}</p>
+              <h2>{localized(UI.tabDaily, locale)}</h2>
+              <p className="lesson-desc">{localized(UI.dailyHint, locale)}</p>
               <ul className="mission-list">
-                {missionsForRoom(activeId).map((mission) => {
-                  const done = save.done.includes(mission.id);
+                {dailies.map((daily) => {
+                  const done = dailyDone.includes(daily.id);
                   return (
-                    <li className={done ? "done" : ""} key={mission.id}>
+                    <li className={done ? "done" : ""} key={daily.id}>
                       <div>
-                        <strong>{missionText(mission, "title", locale)}</strong>
-                        <small>{missionText(mission, "hint", locale)}</small>
+                        <strong>{dailyText(daily, "title", locale)}</strong>
+                        <small>{dailyText(daily, "hint", locale)}</small>
                         <small className="reward">
-                          +{mission.coins} 🪙 · +{mission.xp} XP
+                          +{daily.coins} 🪙 · +{daily.xp}
+                          {save.xpBoost > 0 && !done ? "×2" : ""} XP
                         </small>
                       </div>
                       {done ? (
@@ -371,9 +664,11 @@ export function DemoApp() {
                       ) : (
                         <button
                           onClick={() => {
-                            const result = completeMission(save, mission);
-                            setSave(result.save);
-                            setJustUnlocked(result.unlockedRoom);
+                            const result = claimDaily(save, daily, dateKey);
+                            if (result.ok) {
+                              setSave(result.save);
+                              coinSound();
+                            }
                           }}
                           type="button"
                         >
@@ -384,43 +679,123 @@ export function DemoApp() {
                   );
                 })}
               </ul>
-              <h3>{localized(UI.todayChords, locale)}</h3>
-              <div className="chord-list">
-                {lesson.chords.map((chord) => (
-                  <ChordChart chord={chord} key={chord.name} />
-                ))}
-              </div>
-              <div className="practice-box">
-                <strong>🎯 {localized(UI.drill, locale)}</strong>
-                <p>{lessonPractice(lesson, locale)}</p>
-              </div>
             </>
-          ) : activeWorkspace && activeId && !activeUnlocked ? (
-            <div className="locked-panel">
-              <img src="/gitarroom/guitar.svg" alt="" width={72} height={120} />
-              <p className="lesson-level">🔒 {localized(UI.locked, locale)}</p>
-              <h2>{localized(activeWorkspace.name, locale)}</h2>
-              <p className="lesson-desc">{localized(UI.lockedHint, locale)}</p>
-            </div>
-          ) : (
+          ) : null}
+
+          {panelTab === "tabs" ? (
             <>
-              <img
-                className="welcome-guitar"
-                src="/gitarroom/guitar.svg"
-                alt="GitarRoom guitar"
-                width={72}
-                height={120}
-              />
-              <p className="lesson-level">🎸 GitarRoom</p>
-              <h2>{localized(UI.welcomeTitle, locale)}</h2>
-              <p className="lesson-desc">{localized(COMPANY.description, locale)}</p>
-              <p className="lesson-desc">{localized(UI.pickRoom, locale)}</p>
-              <p className="lesson-desc">
-                {localized(UI.progress, locale)}: {save.done.length}/{MISSIONS.length} ✅ ·{" "}
-                {save.coins} 🪙 · Lv {level}
+              <p className="lesson-level">
+                🎸 {tabsUnlockedCount}/{SOLO_TABS.length}
               </p>
+              <h2>{localized(UI.tabTabs, locale)}</h2>
+              <div className="tab-list">
+                {SOLO_TABS.map((tab) => {
+                  const unlocked = isTabUnlocked(tab, save);
+                  const roomId = "pack" in tab.source ? null : tab.source.roomId;
+                  const roomName =
+                    roomId === null
+                      ? null
+                      : WORKSPACES.find((w) => w.id === roomId)?.name ?? WORKSPACES[0].name;
+                  const hint =
+                    roomName === null
+                      ? localized(UI.unlockByPack, locale)
+                      : localized(UI.unlockByRoom, locale).replace(
+                          "{room}",
+                          localized(roomName, locale),
+                        );
+                  return (
+                    <TabCard
+                      key={tab.id}
+                      lockHint={hint}
+                      locked={!unlocked}
+                      locale={locale}
+                      playLabel={localized(UI.play, locale)}
+                      stopLabel={localized(UI.stop, locale)}
+                      tab={tab}
+                    />
+                  );
+                })}
+              </div>
             </>
-          )}
+          ) : null}
+
+          {panelTab === "shop" ? (
+            <>
+              <p className="lesson-level">
+                {localized(UI.balance, locale)}: {save.coins} 🪙
+              </p>
+              <h2>{localized(UI.tabShop, locale)}</h2>
+              {save.xpBoost > 0 ? (
+                <p className="boost-note">
+                  ⚡ {localized(UI.boostLeft, locale).replace("{n}", String(save.xpBoost))}
+                </p>
+              ) : null}
+              <div className="shop-list">
+                {SHOP_ITEMS.map((item) => {
+                  const owned = item.kind !== "boost" && save.owned.includes(item.id);
+                  const skin = guitarSkinOf(item.id);
+                  const equipped = item.kind === "guitar" && save.activeGuitar === skin;
+                  const soldOut =
+                    owned || (item.kind === "unlock" && save.unlocked.length >= ROOM_ORDER.length);
+                  return (
+                    <article className="shop-item" key={item.id}>
+                      {item.preview ? (
+                        <img src={item.preview} alt="" width={36} height={60} />
+                      ) : (
+                        <span className="shop-emoji">
+                          {item.kind === "boost" ? "⚡" : item.kind === "unlock" ? "🗝️" : "🎼"}
+                        </span>
+                      )}
+                      <div>
+                        <strong>{shopText(item, "name", locale)}</strong>
+                        <small>{shopText(item, "desc", locale)}</small>
+                        <small className="reward">💰 {item.price} 🪙</small>
+                        {deniedId === item.id ? (
+                          <small className="denied">{localized(UI.needCoins, locale)}</small>
+                        ) : null}
+                      </div>
+                      {equipped ? (
+                        <span className="claimed">🎸 {localized(UI.using, locale)}</span>
+                      ) : soldOut ? (
+                        item.kind === "guitar" ? (
+                          <button
+                            onClick={() => {
+                              setSave(equipGuitar(save, skin));
+                              clickSound();
+                            }}
+                            type="button"
+                          >
+                            {localized(UI.use, locale)}
+                          </button>
+                        ) : (
+                          <span className="claimed">✅ {localized(UI.owned, locale)}</span>
+                        )
+                      ) : (
+                        <button
+                          onClick={() => {
+                            const result = buyItem(save, item);
+                            if (result.ok) {
+                              setSave(result.save);
+                              buySound();
+                            } else {
+                              denySound();
+                              setDeniedId(item.id);
+                              window.setTimeout(() => {
+                                setDeniedId((prev) => (prev === item.id ? null : prev));
+                              }, 1600);
+                            }
+                          }}
+                          type="button"
+                        >
+                          {localized(UI.buy, locale)}
+                        </button>
+                      )}
+                    </article>
+                  );
+                })}
+              </div>
+            </>
+          ) : null}
         </aside>
       </div>
 

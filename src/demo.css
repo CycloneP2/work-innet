@@ -406,6 +406,207 @@
   cursor: pointer;
 }
 
+.icon-btn {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* --- Panel tabs: Materi / Harian / Tab / Toko --- */
+.panel-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.panel-tabs button {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--color-line);
+  background: #fff;
+  color: var(--color-ink);
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.panel-tabs button.on {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-cream);
+}
+
+.tab-badge {
+  position: absolute;
+  top: -7px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--color-red);
+  color: #fff;
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+}
+
+.reward-banner {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-left: 5px solid var(--color-green);
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.reward-banner button {
+  margin-left: 8px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-edge);
+  background: var(--color-green);
+  color: #08251a;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* --- Tab cards --- */
+.tab-list {
+  display: grid;
+  gap: 10px;
+}
+
+.tab-card {
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.tab-card.locked {
+  opacity: 0.8;
+  background: var(--color-panel);
+}
+
+.tab-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.tab-card header small {
+  color: var(--color-muted);
+  font-size: 12px;
+  flex: none;
+}
+
+.tab-card p {
+  margin: 4px 0 8px;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.tab-card pre {
+  margin: 0 0 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--color-ink);
+  color: #ffe3a3;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.tab-card button {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--color-edge);
+  background: var(--color-amber);
+  color: #3a2200;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* --- Shop --- */
+.boost-note {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.shop-list {
+  display: grid;
+  gap: 10px;
+}
+
+.shop-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.shop-item img {
+  image-rendering: pixelated;
+  flex: none;
+}
+
+.shop-emoji {
+  font-size: 30px;
+  width: 36px;
+  text-align: center;
+  flex: none;
+}
+
+.shop-item > div {
+  display: grid;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.shop-item small {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.shop-item .denied {
+  font-weight: 800;
+  color: var(--color-red);
+}
+
+.shop-item button {
+  flex: none;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--color-edge);
+  background: var(--color-amber);
+  color: #3a2200;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 13px;
+}
+
 .demo-foot {
   color: var(--color-muted);
   font-size: 12px;

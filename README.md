@@ -36,6 +36,21 @@ materi + diagram chord muncul di panel samping.
 - Tiap misi ngasih **koin 🪙 + XP**; XP naikin **level** (Lv n → n+1 butuh n×100 XP).
 - Progres kesimpen otomatis di browser (`localStorage`), ada tombol hapus simpanan.
 
+## Toko, misi harian, suara & tab hadiah
+
+Panel samping punya 4 tab: **📚 Materi · ☀️ Harian · 🎸 Tab · 🛒 Toko**.
+
+- **Toko**: belanja pakai koin — skin gitar (Midnight, Crimson, Emas),
+  Double XP (5 misi, bisa ditumpuk), Buka Semua Ruangan, Paket Tab Vol.2.
+- **Misi harian**: 3 misi baru tiap hari (reset tengah malam), sama untuk semua pemain.
+- **Efek suara**: mesin Web Audio bikinan sendiri (`src/audio.ts`) — petikan gitar
+  Karplus-Strong (terdengar seperti senar asli), bunyi koin, fanfare unlock.
+  Klik ruangan = genjreng chord ruangan itu. Ada tombol mute 🔊/🔇.
+- **Tab hadiah**: selesaikan semua misi satu ruangan → dapat tab lead/solo yang
+  bisa dibaca + **diputar suaranya** (tombol ▶). Hadiah pertama = Canon Rock!
+  Semua tab adalah aransemen orisinal GitarRoom; "Canon Rock" memakai melodi
+  Canon Pachelbel (1694, public domain) + ending rock bikinan sendiri.
+
 ## Struktur
 
 | Path | Isi |
@@ -53,7 +68,7 @@ materi + diagram chord muncul di panel samping.
 
 ## Aset
 
-- `public/gitarroom/` (gitar, koin, pick): **orisinal, milik sendiri**, dibuat dari
+- `public/gitarroom/` (gitar + 3 skin, koin, pick): **orisinal, milik sendiri**, dibuat dari
   `scripts/pixel-svg.mjs` — bebas dipakai tanpa risiko lisensi.
 - Butuh aset tambahan? Ambil yang **CC0** (bebas komersial, tanpa atribusi):
   - Kenney (60.000+ aset, UI + jingle musik): https://kenney.nl/assets

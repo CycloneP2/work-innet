@@ -32,7 +32,8 @@ function toSvg(name, rows, palette, scale = 4) {
 }
 
 // --- Gitar akustik 12x20 (headstock, neck, body + lubang suara) ---
-toSvg("guitar", [
+// Varian warna = skin gitar yang bisa dibeli di toko.
+const GUITAR_ROWS = [
   "....wwww....",
   "..G.wwww.G..",
   "....wwww....",
@@ -53,16 +54,16 @@ toSvg("guitar", [
   "..WWWSSWWW..",
   "..WWGGGGWW..",
   "...WWWWWW...",
-], {
-  w: "#7a4a26", // headstock + bayangan
-  G: "#f3ad32", // tuner + bridge emas
-  S: "#f2e6c8", // senar
-  N: "#d9a066", // neck
-  f: "#8a5a33", // fret
-  W: "#b66f3e", // body kayu
-  L: "#d98e4a", // highlight body
-  H: "#2b1a12", // lubang suara
-}, 6);
+];
+const GUITAR_PALETTES = {
+  classic: { w: "#7a4a26", G: "#f3ad32", S: "#f2e6c8", N: "#d9a066", f: "#8a5a33", W: "#b66f3e", L: "#d98e4a", H: "#2b1a12" },
+  midnight: { w: "#1f3a5f", G: "#9fd0ff", S: "#e8f2ff", N: "#8fa8c8", f: "#33475e", W: "#3b6ea5", L: "#7fb3e6", H: "#0e1a2b" },
+  crimson: { w: "#5f1f1f", G: "#ffd166", S: "#ffe8e0", N: "#c88f8f", f: "#5e3333", W: "#a53b3b", L: "#e67f7f", H: "#2b0e0e" },
+  gold: { w: "#6b4a12", G: "#fff3c4", S: "#fff8e0", N: "#d9b45f", f: "#6b4a12", W: "#c9932e", L: "#ffe3a3", H: "#241a08" },
+};
+for (const [name, palette] of Object.entries(GUITAR_PALETTES)) {
+  toSvg(name === "classic" ? "guitar" : `guitar-${name}`, GUITAR_ROWS, palette, 6);
+}
 
 // --- Koin 10x10 ---
 toSvg("coin", [
