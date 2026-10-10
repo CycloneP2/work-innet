@@ -1,4 +1,5 @@
 import { COMPANY, WORKSPACES, type WorkspaceId } from "../company.config.ts";
+import { asset as assetUrl } from "../assets.ts";
 import type { LocalizedText } from "../i18n.ts";
 
 export const OFFICE_COLS = 72;
@@ -72,16 +73,16 @@ export function strollPointForAgent(agentIndex: number, leg: "out" | "back"): Of
 
 export const OFFICE_FLOOR_ASSETS = Array.from(
   { length: 9 },
-  (_, index) => `/office-assets/floors/floor_${index}.png`,
+  (_, index) => assetUrl(`office-assets/floors/floor_${index}.png`),
 );
-export const OFFICE_WALL_ASSETS = ["/office-assets/walls/wall_0.png"] as const;
+export const OFFICE_WALL_ASSETS = [assetUrl("office-assets/walls/wall_0.png")] as const;
 export const OFFICE_CARPET_ASSETS = Array.from(
   { length: 3 },
-  (_, index) => `/office-assets/carpets/carpet_${index}.png`,
+  (_, index) => assetUrl(`office-assets/carpets/carpet_${index}.png`),
 );
 export const OFFICE_PETS = [
-  { type: "claudio", label: "Claudio", asset: "/office-assets/pets/claudio/pet.png" },
-  { type: "gitcat", label: "Gitcat", asset: "/office-assets/pets/gitcat/pet.png" },
+  { type: "claudio", label: "Claudio", asset: assetUrl("office-assets/pets/claudio/pet.png") },
+  { type: "gitcat", label: "Gitcat", asset: assetUrl("office-assets/pets/gitcat/pet.png") },
 ] as const;
 
 export type OfficeThemeStyle = {
@@ -166,7 +167,7 @@ const furniture = <const T extends string>(
   type,
   label,
   category,
-  asset: `/office-assets/furniture/${asset}`,
+  asset: assetUrl(`office-assets/furniture/${asset}`),
   footprint: { cols, rows },
   rotatable,
   blocksMovement,

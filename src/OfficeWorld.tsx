@@ -3,6 +3,7 @@
 import type { CSSProperties, DragEvent, KeyboardEvent, MouseEvent, PointerEvent as ReactPointerEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { STATUS_LABELS, WORKSPACES } from "./company.config";
+import { asset } from "./assets";
 import { localized, t, type Locale, type MessageKey } from "./i18n";
 import {
   AMENITY_ZONES,
@@ -162,7 +163,7 @@ function homeDirection(agent: (typeof AGENTS)[number]): Direction {
 
 function seatAsset(direction: Direction) {
   const view = direction === "up" ? "BACK" : direction === "down" ? "FRONT" : "SIDE";
-  return `/office-assets/furniture/CUSHIONED_CHAIR/CUSHIONED_CHAIR_${view}.png`;
+  return asset(`office-assets/furniture/CUSHIONED_CHAIR/CUSHIONED_CHAIR_${view}.png`);
 }
 
 /** DOM helper called inside rAF — leave unchanged values alone to avoid style recalculation. */
@@ -1243,7 +1244,7 @@ export function OfficeWorld({
                     else agentEls.current.delete(agent.id);
                   }}
                   style={{
-                    "--sprite-image": `url("/characters/char_${agent.sprite}.png")`,
+                    "--sprite-image": `url("${asset(`characters/char_${agent.sprite}.png`)}")`,
                     // Sitting direction is fixed per seat, so it need not be recalculated every frame.
                     "--seat-asset": `url("${seatAsset(homeDirection(agent))}")`,
                     // With only six sprites, the same face appears six times at a headcount of 35.

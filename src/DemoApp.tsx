@@ -11,6 +11,7 @@ import {
   strum,
 } from "./audio";
 import { COMPANY, STATUS_LABELS, THEME, WORKSPACES } from "./company.config";
+import { asset } from "./assets";
 import { ChordChart } from "./ChordChart";
 import { dailyText, pickDailies, todayKey } from "./dailies";
 import {
@@ -434,11 +435,11 @@ export function DemoApp() {
         </div>
 
         <div className="stat-pill" title="coins">
-          <img src="/gitarroom/coin.svg" alt="" width={18} height={18} />
+          <img src={asset("gitarroom/coin.svg")} alt="" width={18} height={18} />
           <strong>{save.coins}</strong>
         </div>
         <div className="stat-pill" title="level">
-          <img src="/gitarroom/pick.svg" alt="" width={16} height={16} />
+          <img src={asset("gitarroom/pick.svg")} alt="" width={16} height={16} />
           <strong>Lv {level}</strong>
           <span className="xp-bar">
             <span style={{ width: `${xpPct}%` }} />

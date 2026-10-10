@@ -1,4 +1,5 @@
 import type { Locale } from "./i18n";
+import { asset } from "./assets";
 
 export type ShopKind = "guitar" | "boost" | "unlock" | "tabpack";
 
@@ -14,19 +15,19 @@ export type ShopItem = {
 export const SHOP_ITEMS: readonly ShopItem[] = [
   {
     id: "guitar-midnight", kind: "guitar", price: 120,
-    preview: "/gitarroom/guitar-midnight.svg",
+    preview: asset("gitarroom/guitar-midnight.svg"),
     name: { en: "Midnight Guitar", id: "Gitar Midnight" },
     desc: { en: "Night-blue guitar skin.", id: "Skin gitar biru malam." },
   },
   {
     id: "guitar-crimson", kind: "guitar", price: 120,
-    preview: "/gitarroom/guitar-crimson.svg",
+    preview: asset("gitarroom/guitar-crimson.svg"),
     name: { en: "Crimson Guitar", id: "Gitar Crimson" },
     desc: { en: "Stage-red guitar skin.", id: "Skin gitar merah panggung." },
   },
   {
     id: "guitar-gold", kind: "guitar", price: 250,
-    preview: "/gitarroom/guitar-gold.svg",
+    preview: asset("gitarroom/guitar-gold.svg"),
     name: { en: "Gold Guitar", id: "Gitar Emas" },
     desc: { en: "Shiny gold guitar skin.", id: "Skin gitar emas berkilau." },
   },
@@ -68,5 +69,5 @@ export function guitarSkinOf(itemId: string): string {
 }
 
 export function guitarImage(skin: string): string {
-  return skin === "classic" ? "/gitarroom/guitar.svg" : `/gitarroom/guitar-${skin}.svg`;
+  return asset(skin === "classic" ? "gitarroom/guitar.svg" : `gitarroom/guitar-${skin}.svg`);
 }
